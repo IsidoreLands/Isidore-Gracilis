@@ -1,0 +1,743 @@
+{{DISPLAYTITLE:OODA_WIKI:WikiProject Gracilis/Ludus/VLOR}}
+= OODA_WIKI:WikiProject Gracilis/Ludus/Virtuous Loop Operations Roadmap =
+'''Version:''' 1.1.0.O5
+
+== Vision ==
+To develop and implement a unique, stable, and prestigious identification system for Latin words, Tironian notes, and ligatures. This system will underpin a gamified application designed to teach Latin and Formal Logic proofs by leveraging rich metadata, including rarity, historical era, and source, while ensuring long-term (50-100 year) stability through elite editorial oversight.
+
+== Loop Phase 1: Foundational System Setup & Data Modeling ==
+{{IsidoreOodaVLOR
+| loop_id = LUDUS-L1A: Database Schema Implementation
+| description = Implement the `Entries` table schema and associated tables in SQLite as defined in the Ludus project plan.
+| operation = Ludus
+| leader = Ludus Lead (DB Specialist)
+| status = Planning
+| roadmap = 
+* '''Step 1:''' Review the Ludus project plan for the detailed `Entries` table schema and any related table definitions (e.g., for editors, player progress, ID components).
+* '''Step 2:''' Write the SQL DDL statements to create these tables in SQLite.
+* '''Step 3:''' Include definitions for primary keys, foreign keys, indexes, and constraints as specified.
+* '''Step 4:''' Execute the DDL to create the initial `ludus_database.sqlite` file.
+* '''Step 5:''' Verify the schema creation and document the final schema (e.g., using `sqlite_master` or a diagram).
+| dependencies = Ludus project plan with schema definition.
+| outcome = A functional SQLite database file (`ludus_database.sqlite`) with the `Entries` table and all other core tables structured according to the project schema. Documented schema.
+| time_estimate = 3-4 hours
+| resources = SQLite3, Ludus project plan.
+| confidence = High
+}}
+
+{{IsidoreOodaVLOR
+| loop_id = LUDUS-L1B: Minervia Font Integration & Stroke Count Methodology Development
+| description = Integrate the Tironian font from Operation Minervia and develop a methodology to determine or assign stroke counts for each glyph.
+| operation = Ludus
+| leader = Ludus Lead (Font Specialist)
+| status = Planning
+| roadmap = 
+* '''Step 1:''' Obtain the latest refined Tironian font file (e.g., `TironianNotes.ttf`) from Operation Minervia (`MINERVIA-L2F`).
+* '''Step 2:''' Review the font in FontForge.
+* '''Step 3:''' Research and define a consistent methodology for determining "stroke count" for each Tironian glyph (e.g., visual analysis, path analysis, or defined by historical sources if available).
+* '''Step 4:''' Document this methodology.
+* '''Step 5:''' Develop a small tool or process (e.g., Python script with FontForge bindings, or a spreadsheet for manual entry) to facilitate recording stroke counts.
+| dependencies = [[OODA_WIKI:WikiProject Gracilis/Minervia/VLOR#MINERVIA-L2F: Font Refinement and Metrics Adjustment|MINERVIA-L2F]].
+| outcome = Integrated Minervia font. A documented methodology for determining glyph stroke counts. A prototype tool/process for recording this metadata.
+| time_estimate = 4 hours
+| resources = FontForge, Python (optional), Minervia font file.
+| confidence = Medium
+}}
+
+{{IsidoreOodaVLOR
+| loop_id = LUDUS-L1C: Glyph Stroke Count Analysis and Metadata Generation
+| description = Systematically analyze each glyph in the Minervia Tironian font to determine its stroke count according to the defined methodology and record this metadata.
+| operation = Ludus
+| leader = Ludus Lead (Font Specialist)
+| status = Planning
+| roadmap = 
+* '''Step 1:''' Using the methodology and tool/process from LUDUS-L1B, iterate through all Tironian glyphs in the Minervia font.
+* '''Step 2:''' Determine and record the stroke count for each glyph.
+* '''Step 3 (Unsupervised if applicable):''' If a semi-automated analysis tool was developed, run it. Manual verification of a sample will still be needed.
+* '''Step 4:''' Compile the stroke count metadata into a structured format (e.g., CSV file mapping PUA codepoint to stroke count).
+* '''Step 5:''' Perform QA on the generated stroke count data for consistency and accuracy.
+| dependencies = LUDUS-L1B.
+| outcome = A comprehensive dataset mapping each Tironian glyph's PUA codepoint to its stroke count.
+| time_estimate = 4 hours (for setup, QA, and managing a longer analysis process if manual/semi-manual)
+| resources = Minervia font, tool/process from LUDUS-L1B.
+| confidence = Medium (depends on analysis complexity)
+}}
+
+{{IsidoreOodaVLOR
+| loop_id = LUDUS-L1D: Minervia OCR Model Integration & ALTO XML Output Configuration Development
+| description = Integrate the Tironian OCR model from Operation Minervia and configure Tesseract to output structured ALTO XML including glyph ID (PUA) and stroke metadata.
+| operation = Ludus
+| leader = Ludus Lead (OCR Specialist)
+| status = Planning
+| roadmap = 
+* '''Step 1:''' Obtain the latest trained Tironian OCR model (`tironian.traineddata`) from Operation Minervia (`MINERVIA-L3F` or `MINERVIA-L3G`).
+* '''Step 2:''' Set up a Tesseract environment capable of using this custom model.
+* '''Step 3:''' Research Tesseract's capabilities for ALTO XML output and custom metadata injection.
+* '''Step 4:''' Develop Tesseract configuration files or wrapper scripts to:
+** Output ALTO XML.
+** Include the PUA codepoint for each recognized Tironian glyph.
+** Integrate the stroke count metadata (from LUDUS-L1C) into the ALTO XML for each glyph.
+* '''Step 5:''' Test with sample Tironian note images.
+| dependencies = [[OODA_WIKI:WikiProject Gracilis/Minervia/VLOR#MINERVIA-L3F: Full Tesseract Model Training & Initial Validation|MINERVIA-L3F]] (or [[OODA_WIKI:WikiProject Gracilis/Minervia/VLOR#MINERVIA-L3G: OCR Model Iteration and Parameter Tuning (Optional)|MINERVIA-L3G]]), LUDUS-L1C.
+| outcome = A Tesseract OCR setup configured to use the Minervia model and output ALTO XML with PUA codepoints and stroke count metadata.
+| time_estimate = 4-6 hours
+| resources = Tesseract OCR, Minervia OCR model, stroke count data, sample images.
+| confidence = Medium
+}}
+
+{{IsidoreOodaVLOR
+| loop_id = LUDUS-L1E: Test and Refine OCR ALTO XML Output Pipeline
+| description = Thoroughly test the configured Tesseract OCR pipeline for accuracy of ALTO XML structure, PUA codepoint identification, and stroke metadata inclusion. Refine as necessary.
+| operation = Ludus
+| leader = Ludus Lead (OCR Specialist)
+| status = Planning
+| roadmap = 
+* '''Step 1:''' Prepare a diverse test set of images containing Tironian notes (ideally sourced from original manuscripts if possible, or high-quality synthetic data).
+* '''Step 2:''' Run these images through the OCR pipeline developed in LUDUS-L1D.
+* '''Step 3:''' Validate the generated ALTO XML files for:
+** Correct XML structure.
+** Accurate PUA codepoint for each Tironian symbol.
+** Correct stroke count associated with each symbol.
+** Positional accuracy of bounding boxes.
+* '''Step 4:''' Document any issues or discrepancies.
+* '''Step 5:''' Iterate on the Tesseract configuration or wrapper scripts (from LUDUS-L1D) to address identified issues.
+| dependencies = LUDUS-L1D.
+| outcome = A validated and refined OCR pipeline capable of producing accurate ALTO XML with required metadata for Tironian notes. QA report.
+| time_estimate = 4 hours (per iteration of testing and refinement)
+| resources = Tesseract OCR setup, test images, XML validation tools.
+| confidence = Medium
+}}
+
+{{IsidoreOodaVLOR
+| loop_id = LUDUS-L1F: Unique ID System (`CCC-NN-SSSSSS-TTT`) Design and Implementation
+| description = Finalize the design of the `CCC-NN-SSSSSS-TTT` unique ID system and implement the generation logic.
+| operation = Ludus
+| leader = Ludus Lead (System Architect)
+| status = Planning
+| roadmap = 
+* '''Step 1:''' Review the project plan for the specifications of the `CCC-NN-SSSSSS-TTT` ID components (Category, Number, Sequence, Type).
+* '''Step 2:''' Define the exact rules for generating each component, including sequencing logic and padding.
+* '''Step 3:''' Develop a Python module or function that can generate these unique IDs based on input parameters (e.g., category, next available sequence number).
+* '''Step 4:''' Implement logic to ensure ID uniqueness and manage sequence numbers (this might involve a small utility table in the database or a state file).
+* '''Step 5:''' Write unit tests for the ID generation logic.
+| dependencies = Ludus project plan.
+| outcome = A robust and tested Python module for generating `CCC-NN-SSSSSS-TTT` unique IDs. Documented ID generation rules.
+| time_estimate = 3-4 hours
+| resources = Python.
+| confidence = High
+}}
+
+{{IsidoreOodaVLOR
+| loop_id = LUDUS-L1G: Wikidata Import Script Development (SPARQL)
+| description = Develop and test a Python script to import Latin word data from Wikidata via SPARQL queries and map it to the `Entries` table schema.
+| operation = Ludus
+| leader = Ludus Lead (Backend Developer)
+| status = Planning
+| roadmap = 
+* '''Step 1:''' Identify relevant Latin word properties and items on Wikidata.
+* '''Step 2:''' Formulate SPARQL queries to extract desired data (e.g., lexeme, lemma, P31 (instance of), P5138 (form of), glosses).
+* '''Step 3:''' Develop a Python script using `requests` (or a SPARQL library) to execute these queries.
+* '''Step 4:''' Implement logic to parse the SPARQL results (typically JSON) and map the data to the fields of the `Entries` table in `ludus_database.sqlite` (from LUDUS-L1A).
+* '''Step 5:''' Integrate the Unique ID generation logic (from LUDUS-L1F).
+* '''Step 6:''' Test the script with a small batch of queries and verify data integrity in the database.
+| dependencies = LUDUS-L1A, LUDUS-L1F.
+| outcome = A Python script capable of importing Latin word data from Wikidata into the Ludus database, including unique ID generation.
+| time_estimate = 4-6 hours
+| resources = Python, `requests` library, access to Wikidata SPARQL endpoint.
+| confidence = Medium
+}}
+
+{{IsidoreOodaVLOR
+| loop_id = LUDUS-L1H: Perseus Import Script Development (TEI XML Parsing)
+| description = Develop and test a Python script to import Latin word data from the Perseus Digital Library (TEI XML files) and map it to the `Entries` table schema.
+| operation = Ludus
+| leader = Ludus Lead (Backend Developer)
+| status = Planning
+| roadmap = 
+* '''Step 1:''' Identify and obtain relevant TEI XML source files from Perseus.
+* '''Step 2:''' Analyze the TEI XML structure to locate word data, definitions, morphological information, etc.
+* '''Step 3:''' Develop a Python script using `xml.etree.ElementTree` (or `lxml`) to parse these TEI XML files.
+* '''Step 4:''' Implement logic to extract desired data and map it to the fields of the `Entries` table in `ludus_database.sqlite` (from LUDUS-L1A).
+* '''Step 5:''' Integrate the Unique ID generation logic (from LUDUS-L1F).
+* '''Step 6:''' Test the script with sample TEI files and verify data integrity in the database.
+| dependencies = LUDUS-L1A, LUDUS-L1F.
+| outcome = A Python script capable of importing Latin word data from Perseus TEI XML files into the Ludus database, including unique ID generation.
+| time_estimate = 4-6 hours
+| resources = Python, `xml.etree.ElementTree` or `lxml` library, Perseus TEI XML data.
+| confidence = Medium
+}}
+
+== Loop Phase 2: Initial Data Population & Editorial Verification ==
+{{IsidoreOodaVLOR
+| loop_id = LUDUS-L2A: Initial Data Import Execution (Wikidata & Perseus)
+| description = Execute the developed import scripts to populate the Ludus database with an initial target corpus of Latin words.
+| operation = Ludus
+| leader = Ludus Lead (Data Manager)
+| status = Planning
+| roadmap = 
+* '''Step 1:''' Prepare the environment and ensure the Wikidata (LUDUS-L1G) and Perseus (LUDUS-L1H) import scripts are ready.
+* '''Step 2 (Unsupervised if long):''' Execute the import scripts to populate the database with an initial target of ~1,000 Latin words (adjust target as needed).
+* '''Step 3 (Supervised):''' Monitor the import process for errors and performance.
+* '''Step 4:''' Perform initial verification of the imported data count and spot-check random entries in the database.
+* '''Step 5:''' Document the import run, including number of entries added and any issues encountered.
+| dependencies = LUDUS-L1G, LUDUS-L1H.
+| outcome = Ludus database populated with an initial set of Latin words from Wikidata and Perseus. Import process report.
+| time_estimate = 2-4 hours (for setup, monitoring, initial verification). Import run itself may be longer.
+| resources = Python scripts, database.
+| confidence = High
+}}
+
+{{IsidoreOodaVLOR
+| loop_id = LUDUS-L2B: Rarity Score Algorithm Development & Corpus Preparation (PHI Latin, DigiPal)
+| description = Develop the algorithm for rarity score calculation and prepare the necessary reference corpora (PHI Latin Texts, DigiPal data).
+| operation = Ludus
+| leader = Ludus Lead (Data Scientist)
+| status = Planning
+| roadmap = 
+* '''Step 1:''' Define the rarity score calculation logic (e.g., frequency-based for PHI, appearance counts for DigiPal).
+* '''Step 2:''' Acquire and preprocess the PHI Latin Texts corpus. This may involve parsing, tokenization, and frequency counting.
+* '''Step 3:''' Acquire and preprocess data from DigiPal (or similar manuscript sources) for Tironian note appearance counts.
+* '''Step 4:''' Develop a Python script to implement the rarity calculation algorithm, capable of querying the Ludus database and the prepared reference corpora.
+* '''Step 5:''' Test the script components with sample data.
+| dependencies = LUDUS-L1A (for database structure). Access to PHI Latin Texts and DigiPal (or equivalent) data.
+| outcome = A Python script for calculating rarity scores. Prepared reference corpora for Latin words and Tironian notes.
+| time_estimate = 4-6 hours (corpus preparation can be significant)
+| resources = Python, PHI Latin Texts, DigiPal data.
+| confidence = Medium
+}}
+
+{{IsidoreOodaVLOR
+| loop_id = LUDUS-L2C: Rarity Score Calculation and Database Update
+| description = Execute the rarity score calculation script for all relevant entries in the database and update them with the computed rarity scores.
+| operation = Ludus
+| leader = Ludus Lead (Data Manager)
+| status = Planning
+| roadmap = 
+* '''Step 1:''' Ensure the rarity script (LUDUS-L2B) and prepared corpora are ready.
+* '''Step 2 (Unsupervised if long):''' Execute the rarity script to calculate scores for all imported entries (from LUDUS-L2A and any Tironian notes if available).
+* '''Step 3 (Supervised):''' Monitor the script execution.
+* '''Step 4:''' Update the `Rarity` field in the `Entries` table with the calculated scores.
+* '''Step 5:''' Verify a sample of rarity scores and document the process.
+| dependencies = LUDUS-L2A, LUDUS-L2B.
+| outcome = Ludus database entries updated with calculated rarity scores.
+| time_estimate = 2-4 hours (for setup, monitoring, verification). Calculation run may be longer.
+| resources = Python script, database, prepared corpora.
+| confidence = Medium
+}}
+
+{{IsidoreOodaVLOR
+| loop_id = LUDUS-L2D: Elite Editor Recruitment Strategy and Materials Development
+| description = Develop a comprehensive strategy and prepare materials for recruiting the target 200 elite editors.
+| operation = Ludus
+| leader = Ludus Lead (Recruitment Coordinator)
+| status = Planning
+| roadmap = 
+* '''Step 1:''' Define the criteria for "elite editors" (e.g., academic qualifications, publications, institutional affiliations).
+* '''Step 2:''' Develop a recruitment strategy: identify target institutions, journals, societies, and communication channels.
+* '''Step 3:''' Prepare recruitment materials: project overview, editor role description, benefits of participation, application/expression of interest form.
+* '''Step 4:''' Set up a system for tracking applications and communications.
+* '''Step 5:''' Draft template communication emails.
+| dependencies = Clear project vision and goals.
+| outcome = A documented editor recruitment strategy, a suite of recruitment materials, and a system for managing applicants.
+| time_estimate = 4 hours
+| resources = Word processor, email client.
+| confidence = High
+}}
+
+{{IsidoreOodaVLOR
+| loop_id = LUDUS-L2E: Initial Editor Outreach and Onboarding (Pilot Group)
+| description = Initiate contact with potential elite editors and onboard a small pilot group to test the verification workflow.
+| operation = Ludus
+| leader = Ludus Lead (Recruitment Coordinator)
+| status = Planning
+| roadmap = 
+* '''Step 1:''' Identify a small target list (e.g., 10-20 individuals) for initial pilot recruitment based on strategy from LUDUS-L2D.
+* '''Step 2:''' Send out personalized invitations using materials from LUDUS-L2D.
+* '''Step 3:''' Process expressions of interest and select a pilot group (e.g., 3-5 editors).
+* '''Step 4:''' Develop onboarding materials/session for the pilot group, explaining the verification tasks and any tools.
+* '''Step 5:''' Conduct onboarding for the pilot group.
+| dependencies = LUDUS-L2D.
+| outcome = A pilot group of elite editors recruited and onboarded. Feedback on recruitment and onboarding process.
+| time_estimate = 4 hours
+| resources = Communication tools, onboarding materials.
+| confidence = Medium
+}}
+
+{{IsidoreOodaVLOR
+| loop_id = LUDUS-L2F: Editorial Verification Workflow Design & Tooling (if any)
+| description = Design the detailed workflow for editorial verification and develop or specify any tools required to support this process.
+| operation = Ludus
+| leader = Ludus Lead (System Architect)
+| status = Planning
+| roadmap = 
+* '''Step 1:''' Define the step-by-step process for an editor to verify an entry (reviewing Latin word, Tironian note, translation, `TransCode`, `Rarity`, source, etc.).
+* '''Step 2:''' Specify how editors will access `pending` entries and submit their verifications (e.g., direct database access with a simple interface, a web application, shared spreadsheets with scripts).
+* '''Step 3:''' If a custom tool is needed (e.g., a simple web interface for editors):
+** Define minimal viable features for this tool.
+** Develop a prototype of the tool.
+* '''Step 4:''' Document the verification workflow for editors.
+* '''Step 5:''' Define how `Status` changes from `pending` to `confirmed` or `needs_review`.
+| dependencies = LUDUS-L1A (for data structure to verify).
+| outcome = A documented editorial verification workflow. Specifications for, or a prototype of, any necessary editor tools.
+| time_estimate = 4-6 hours (tool prototyping can extend this)
+| resources = Database, potentially web development tools.
+| confidence = Medium
+}}
+
+{{IsidoreOodaVLOR
+| loop_id = LUDUS-L2G: Commence Editorial Verification with Pilot Group
+| description = Launch the editorial verification process with the onboarded pilot group of editors, focusing on initial data batches and gathering feedback.
+| operation = Ludus
+| leader = Ludus Lead (Editorial Manager)
+| status = Planning
+| roadmap = 
+* '''Step 1:''' Assign an initial batch of `pending` entries (from LUDUS-L2A, with rarity scores from LUDUS-L2C) to the pilot editors.
+* '''Step 2:''' Provide support and answer questions from the pilot editors as they begin verification using the workflow/tools from LUDUS-L2F.
+* '''Step 3:''' Collect feedback from pilot editors on the workflow, tools, clarity of tasks, and data quality.
+* '''Step 4:''' Monitor the initial set of verifications, checking for consistency and adherence to guidelines.
+* '''Step 5:''' Document lessons learned and areas for improvement in the verification process or tools.
+| dependencies = LUDUS-L2A, LUDUS-L2C, LUDUS-L2E, LUDUS-L2F.
+| outcome = First batch of entries editorially verified. Feedback from pilot editors incorporated to refine the verification workflow and tools.
+| time_estimate = 4 hours (active support and feedback collection)
+| resources = Verified data, communication channels, editor tools.
+| confidence = Medium
+}}
+
+== Loop Phase 3: Core Gameplay Loop Development ==
+{{IsidoreOodaVLOR
+| loop_id = LUDUS-L3A: Game Engine Selection & Setup
+| description = Evaluate and select a suitable game engine (e.g., Unity, Godot, React Native, Phaser) and set up the initial project environment.
+| operation = Ludus
+| leader = Ludus Lead (Game Developer)
+| status = Planning
+| roadmap = 
+* '''Step 1:''' Define key requirements for the game engine (platform support, 2D capabilities, database integration, ease of UI development, licensing).
+* '''Step 2:''' Research and evaluate potential game engines based on these requirements.
+* '''Step 3:''' Select the game engine.
+* '''Step 4:''' Install the chosen game engine and any necessary SDKs/dependencies.
+* '''Step 5:''' Create the initial Ludus game project within the engine and set up version control (e.g., Git).
+| dependencies = Clear understanding of game feature requirements.
+| outcome = Selected game engine. Initial game project created and development environment configured.
+| time_estimate = 4 hours
+| resources = Game engine software.
+| confidence = High
+}}
+
+{{IsidoreOodaVLOR
+| loop_id = LUDUS-L3B: Core UI/UX Design & Mockups for Game Modes
+| description = Design the user interface (UI) and user experience (UX) for the core game modes, creating wireframes and mockups.
+| operation = Ludus
+| leader = Ludus Lead (UI/UX Designer)
+| status = Planning
+| roadmap = 
+* '''Step 1:''' Based on game mode descriptions, sketch initial UI layouts for displaying Latin text, Tironian glyphs (using Minervia font), translations, multiple-choice options, input fields, feedback, etc.
+* '''Step 2:''' Develop wireframes for each core game screen and interaction flow.
+* '''Step 3:''' Create higher-fidelity mockups for key screens, defining visual style, typography, and color palette.
+* '''Step 4:''' Consider accessibility in UI design.
+* '''Step 5:''' Document UI/UX design decisions and assets.
+| dependencies = LUDUS-L3A (engine choice might influence UI capabilities). Minervia font for Tironian glyph display.
+| outcome = A set of UI wireframes and mockups for the core game modes. UI style guide.
+| time_estimate = 4-8 hours
+| resources = Design software (e.g., Figma, Adobe XD).
+| confidence = Medium
+}}
+
+{{IsidoreOodaVLOR
+| loop_id = LUDUS-L3C: Multiple-Choice Game Mode - Backend Logic & DB Integration
+| description = Develop the backend logic for the multiple-choice quiz mode, including fetching questions/answers from the database based on filters.
+| operation = Ludus
+| leader = Ludus Lead (Backend Game Developer)
+| status = Planning
+| roadmap = 
+* '''Step 1:''' Design the logic for generating multiple-choice questions (e.g., display a Latin word, offer 4 translation choices, one correct).
+* '''Step 2:''' Implement Python (or game engine's scripting language) functions to query the `ludus_database.sqlite` (from LUDUS-L1A) for `Entries` data.
+* '''Step 3:''' Filter queries based on `Rarity`, `Difficulty`, `Era`, `Status` (`confirmed`), `TextCategory` as per game design.
+* '''Step 4:''' Implement logic to select a correct answer and generate plausible distractors.
+* '''Step 5:''' Create API endpoints or functions for the frontend to request quiz data and submit answers.
+| dependencies = LUDUS-L1A, LUDUS-L2G (for confirmed data), LUDUS-L3A.
+| outcome = Backend logic for generating and serving multiple-choice quiz questions from the database.
+| time_estimate = 4 hours
+| resources = Game engine, database access libraries.
+| confidence = High
+}}
+
+{{IsidoreOodaVLOR
+| loop_id = LUDUS-L3D: Multiple-Choice Game Mode - Frontend Implementation
+| description = Implement the frontend UI for the multiple-choice game mode using the chosen game engine, integrating with the backend logic.
+| operation = Ludus
+| leader = Ludus Lead (Frontend Game Developer)
+| status = Planning
+| roadmap = 
+* '''Step 1:''' Using the UI mockups (LUDUS-L3B) and game engine (LUDUS-L3A), create the scenes/screens for the multiple-choice mode.
+* '''Step 2:''' Implement UI elements for displaying questions, answer choices, and feedback.
+* '''Step 3:''' Integrate with backend API/functions (LUDUS-L3C) to fetch quiz data and display it.
+* '''Step 4:''' Implement logic for user interaction (selecting answers) and submitting them to the backend.
+* '''Step 5:''' Display feedback (correct/incorrect) to the user.
+| dependencies = LUDUS-L3B, LUDUS-L3C.
+| outcome = A playable frontend for the multiple-choice game mode within the game engine.
+| time_estimate = 4-6 hours
+| resources = Game engine, UI assets.
+| confidence = High
+}}
+
+{{IsidoreOodaVLOR
+| loop_id = LUDUS-L3E: Open-Entry Game Mode - Backend Logic & DB Integration
+| description = Develop the backend logic for the open-entry quiz mode (e.g., user types translation or Latin word).
+| operation = Ludus
+| leader = Ludus Lead (Backend Game Developer)
+| status = Planning
+| roadmap = 
+* '''Step 1:''' Design logic for open-entry questions (e.g., show Latin word, user types translation; or show translation, user types Latin word).
+* '''Step 2:''' Implement backend functions to fetch question data from the `Entries` table, filtered appropriately.
+* '''Step 3:''' Implement logic to validate user's typed input against the correct answer, possibly allowing for minor variations or using fuzzy matching if appropriate.
+* '''Step 4:''' Create API endpoints or functions for the frontend.
+| dependencies = LUDUS-L1A, LUDUS-L2G, LUDUS-L3A.
+| outcome = Backend logic for the open-entry quiz mode.
+| time_estimate = 4 hours
+| resources = Game engine, database access libraries.
+| confidence = Medium
+}}
+
+{{IsidoreOodaVLOR
+| loop_id = LUDUS-L3F: Open-Entry Game Mode - Frontend Implementation
+| description = Implement the frontend UI for the open-entry game mode.
+| operation = Ludus
+| leader = Ludus Lead (Frontend Game Developer)
+| status = Planning
+| roadmap = 
+* '''Step 1:''' Using UI mockups (LUDUS-L3B), create scenes/screens for the open-entry mode.
+* '''Step 2:''' Implement UI elements for displaying the prompt and an input field for the user.
+* '''Step 3:''' Integrate with backend (LUDUS-L3E) to fetch data and submit answers.
+* '''Step 4:''' Implement answer validation feedback.
+| dependencies = LUDUS-L3B, LUDUS-L3E.
+| outcome = A playable frontend for the open-entry game mode.
+| time_estimate = 4 hours
+| resources = Game engine, UI assets.
+| confidence = High
+}}
+
+{{IsidoreOodaVLOR
+| loop_id = LUDUS-L3G: Tironian Note Recognition Mode - Backend Logic & DB Integration
+| description = Develop backend logic for displaying a Tironian glyph and having the user identify it or its meaning.
+| operation = Ludus
+| leader = Ludus Lead (Backend Game Developer)
+| status = Planning
+| roadmap = 
+* '''Step 1:''' Design quiz types (e.g., show glyph, user types Latin transcription; show glyph, multiple-choice transcription).
+* '''Step 2:''' Implement backend functions to select Tironian notes from `Entries` (where `Category` indicates Tironian note).
+* '''Step 3:''' Ensure Tironian note glyphs (using Minervia font via PUA codes) can be referenced/served to the frontend.
+* '''Step 4:''' Implement validation logic based on quiz type.
+| dependencies = LUDUS-L1A (Entries with Tironian notes), LUDUS-L1B (Font integration for reference), LUDUS-L2G, LUDUS-L3A.
+| outcome = Backend logic for Tironian note recognition quizzes.
+| time_estimate = 4 hours
+| resources = Game engine, database access.
+| confidence = Medium
+}}
+
+{{IsidoreOodaVLOR
+| loop_id = LUDUS-L3H: Tironian Note Recognition Mode - Frontend Implementation
+| description = Implement the frontend UI for Tironian note recognition, ensuring correct display of glyphs using the Minervia font.
+| operation = Ludus
+| leader = Ludus Lead (Frontend Game Developer)
+| status = Planning
+| roadmap = 
+* '''Step 1:''' Using UI mockups (LUDUS-L3B), create scenes for this mode.
+* '''Step 2:''' Implement UI to display Tironian glyphs correctly using the integrated Minervia font (PUA codepoints). This step relies heavily on the success of Minervia's font and its integration within the chosen game engine.
+* '''Step 3:''' Implement input methods (text field, multiple choice buttons).
+* '''Step 4:''' Integrate with backend (LUDUS-L3G).
+| dependencies = LUDUS-L3B, LUDUS-L3G, LUDUS-L1B (successful font integration in engine).
+| outcome = A playable frontend for Tironian note recognition.
+| time_estimate = 4-6 hours (glyph display can be tricky)
+| resources = Game engine, UI assets, Minervia font.
+| confidence = Medium
+}}
+
+{{IsidoreOodaVLOR
+| loop_id = LUDUS-L3I: Logic Proof Mode - Initial Design & Prototyping (Simple Proofs)
+| description = Design the core mechanics and UI for a simplified version of the Formal Logic proof mode. Create a paper or interactive prototype.
+| operation = Ludus
+| leader = Ludus Lead (Game Designer/Logic Specialist)
+| status = Planning
+| roadmap = 
+* '''Step 1:''' Research existing logic teaching tools and games for inspiration.
+* '''Step 2:''' Define a small set of basic formal logic rules to implement initially (e.g., Modus Ponens, Modus Tollens).
+* '''Step 3:''' Design the interaction for constructing proofs (e.g., drag-and-drop premises/rules, selecting lines to apply rules to).
+* '''Step 4:''' Sketch UI layouts for presenting logic problems and the proof construction interface.
+* '''Step 5:''' Create a paper prototype or a simple interactive mockup (e.g., using Figma, PowerPoint, or a prototyping tool) to test the core concept.
+| dependencies = LUDUS-L3A.
+| outcome = A documented design for the simple Logic Proof mode, including rules, interaction flow, and UI sketches/prototypes.
+| time_estimate = 4-6 hours
+| resources = Prototyping tools.
+| confidence = Medium
+}}
+
+{{IsidoreOodaVLOR
+| loop_id = LUDUS-L3J: Logic Proof Mode - Backend Logic (Simple Proofs)
+| description = Develop backend logic to represent logic problems, validate proof steps according to simple rules, and determine proof completion.
+| operation = Ludus
+| leader = Ludus Lead (Backend Game Developer/Logic Specialist)
+| status = Planning
+| roadmap = 
+* '''Step 1:''' Define data structures to represent logical statements, premises, conclusions, and proof steps.
+* '''Step 2:''' Implement backend functions to validate application of the initial set of logic rules (from LUDUS-L3I) to given statements/lines.
+* '''Step 3:''' Develop logic to check if a constructed proof correctly derives the conclusion.
+* '''Step 4:''' Implement functionality to serve logic problems (e.g., from a predefined set or procedurally generated simple problems).
+| dependencies = LUDUS-L3I.
+| outcome = Backend logic for managing and validating simple formal logic proofs.
+| time_estimate = 4-8 hours (logic validation can be complex)
+| resources = Game engine/scripting language.
+| confidence = Medium
+}}
+
+{{IsidoreOodaVLOR
+| loop_id = LUDUS-L3K: Logic Proof Mode - Frontend Implementation (Simple Proofs)
+| description = Implement the frontend UI for the simple Logic Proof mode, allowing users to construct proofs.
+| operation = Ludus
+| leader = Ludus Lead (Frontend Game Developer)
+| status = Planning
+| roadmap = 
+* '''Step 1:''' Using designs from LUDUS-L3I, create scenes/UI for the logic proof mode.
+* '''Step 2:''' Implement UI elements for displaying logic problems, premises, available rules, and the proof construction area.
+* '''Step 3:''' Develop frontend logic for user interactions (e.g., selecting premises, applying rules).
+* '''Step 4:''' Integrate with backend (LUDUS-L3J) to validate steps and receive feedback.
+| dependencies = LUDUS-L3I, LUDUS-L3J.
+| outcome = A playable frontend for constructing simple logic proofs.
+| time_estimate = 4-8 hours
+| resources = Game engine, UI assets.
+| confidence = Medium
+}}
+
+{{IsidoreOodaVLOR
+| loop_id = LUDUS-L3L: Player Progress Tracking System - Data Model & Backend
+| description = Design and implement the database schema extensions and backend logic for tracking player progress and performance.
+| operation = Ludus
+| leader = Ludus Lead (Backend Developer/DB Specialist)
+| status = Planning
+| roadmap = 
+* '''Step 1:''' Define what aspects of player progress need to be tracked (e.g., words learned, concepts mastered, performance on different game modes, Tironian notes recognized, logic rules applied).
+* '''Step 2:''' Extend the SQLite database schema (LUDUS-L1A) with new tables for player profiles and progress data (e.g., `PlayerProgress`, `PlayerAnswers`).
+* '''Step 3:''' Implement backend functions to record player actions, scores, and track progress against specific `Entries` or concepts.
+* '''Step 4:''' Create API endpoints for the frontend to save and retrieve player progress.
+| dependencies = LUDUS-L1A, LUDUS-L3A.
+| outcome = Database schema extended for player progress. Backend logic and APIs for tracking player performance.
+| time_estimate = 4 hours
+| resources = SQLite, game engine/scripting language.
+| confidence = High
+}}
+
+{{IsidoreOodaVLOR
+| loop_id = LUDUS-L3M: Adaptive Difficulty Algorithm - Design & Backend Implementation
+| description = Design and implement the backend algorithm for adaptive difficulty, adjusting quiz content based on player performance.
+| operation = Ludus
+| leader = Ludus Lead (Game Designer/Backend Developer)
+| status = Planning
+| roadmap = 
+* '''Step 1:''' Research or define an adaptive difficulty algorithm (e.g., based on Elo rating, spaced repetition, mastery learning).
+* '''Step 2:''' Determine how player progress data (from LUDUS-L3L) will feed into this algorithm.
+* '''Step 3:''' Implement the algorithm in the backend to dynamically adjust the selection criteria (e.g., `Rarity`, `Difficulty` levels of `Entries`) for generating new quiz questions.
+* '''Step 4:''' Test the algorithm with simulated player data to ensure it behaves as expected.
+| dependencies = LUDUS-L3L.
+| outcome = A backend adaptive difficulty algorithm integrated with player progress data.
+| time_estimate = 4-6 hours
+| resources = Game engine/scripting language.
+| confidence = Medium
+}}
+
+{{IsidoreOodaVLOR
+| loop_id = LUDUS-L3N: Game UI Integration of Adaptive Difficulty
+| description = Integrate the adaptive difficulty logic into the frontend game modes so that quiz content dynamically adjusts to the player.
+| operation = Ludus
+| leader = Ludus Lead (Frontend Game Developer)
+| status = Planning
+| roadmap = 
+* '''Step 1:''' Modify frontend game modes (LUDUS-L3D, L3F, L3H, L3K) to request quiz content in a way that allows the backend adaptive difficulty algorithm (LUDUS-L3M) to influence selection.
+* '''Step 2:''' Ensure player progress is consistently saved via LUDUS-L3L to feed the adaptive algorithm.
+* '''Step 3:''' Test the end-to-end flow: player plays, progress is saved, new quizzes reflect adapted difficulty.
+* '''Step 4:''' Optionally, provide UI feedback to the player about their progress or current difficulty level.
+| dependencies = LUDUS-L3M, relevant frontend game mode loops (L3D, L3F, L3H, L3K).
+| outcome = Game modes that dynamically adapt their content difficulty based on player performance.
+| time_estimate = 4 hours
+| resources = Game engine.
+| confidence = Medium
+}}
+
+{{IsidoreOodaVLOR
+| loop_id = LUDUS-L3O: OODA WIKI Integration - Script/Tool for Pushing Verified Entries
+| description = Develop a script or tool to automate the process of pushing newly verified entries from the Ludus database to specified OODA WIKI pages.
+| operation = Ludus
+| leader = Ludus Lead (Backend Developer/Wiki Specialist)
+| status = Planning
+| roadmap = 
+* '''Step 1:''' Define the format for representing Ludus entries on OODA WIKI (e.g., using a template, structured data).
+* '''Step 2:''' Develop a Python script (e.g., using Pywikibot) to:
+** Query the Ludus database for entries with `Status = confirmed` since the last update.
+** Format these entries for MediaWiki.
+** Authenticate and edit target OODA WIKI pages to add/update this content.
+* '''Step 3:''' Implement error handling and logging for the script.
+* '''Step 4:''' Test the script with a small batch of verified entries on a test OODA WIKI page.
+| dependencies = LUDUS-L2G (for verified entries), Pywikibot or MediaWiki API knowledge.
+| outcome = A script/tool capable of pushing verified Ludus entries to OODA WIKI.
+| time_estimate = 4-6 hours
+| resources = Python, Pywikibot, OODA WIKI access.
+| confidence = Medium
+}}
+
+{{IsidoreOodaVLOR
+| loop_id = LUDUS-L3P: OODA WIKI Integration - Workflow Definition & Initial Test Push
+| description = Define the weekly workflow for updating OODA WIKI with verified entries and perform an initial test push to live (or designated) pages.
+| operation = Ludus
+| leader = Ludus Lead (Editorial Manager/Wiki Specialist)
+| status = Planning
+| roadmap = 
+* '''Step 1:''' Document the weekly procedure for running the wiki update script (LUDUS-L3O).
+* '''Step 2:''' Specify review and approval steps before content goes live on OODA WIKI, if any.
+* '''Step 3:''' Identify the target OODA WIKI pages for different types of content (e.g., Latin words, Tironian notes).
+* '''Step 4:''' Perform an initial test push of a small set of verified data to the designated OODA WIKI pages.
+* '''Step 5:''' Verify the content appears correctly on OODA WIKI and refine the process/script as needed.
+| dependencies = LUDUS-L3O.
+| outcome = A documented workflow for weekly OODA WIKI updates. Successful initial push of verified entries to OODA WIKI.
+| time_estimate = 3-4 hours
+| resources = Wiki update script, OODA WIKI.
+| confidence = High
+}}
+
+== Loop Phase 4: System Scaling and Feature Refinement ==
+{{IsidoreOodaVLOR
+| loop_id = LUDUS-L4A: Scaled Data Import Management & Monitoring Strategy
+| description = Establish a strategy for managing and monitoring the ongoing, scaled import of data to reach the target of 10,000+ entries.
+| operation = Ludus
+| leader = Ludus Lead (Data Manager)
+| status = Planning
+| roadmap = 
+* '''Step 1:''' Review performance and robustness of initial import scripts (LUDUS-L1G, L1H, L2A).
+* '''Step 2:''' Identify new data sources or expand scope within existing sources for further imports.
+* '''Step 3:''' Develop a plan for periodic, large-scale import runs, including scheduling, resource allocation, and monitoring.
+* '''Step 4:''' Enhance import scripts with better logging, error reporting, and duplicate detection/handling for scaled operations.
+* '''Step 5:''' Define metrics for monitoring the health and progress of data acquisition.
+| dependencies = LUDUS-L2A (existing import processes).
+| outcome = A strategy and enhanced scripts for managing scaled data importation.
+| time_estimate = 4 hours
+| resources = Python scripts, database.
+| confidence = Medium
+}}
+
+{{IsidoreOodaVLOR
+| loop_id = LUDUS-L4B: Scaled Editorial Verification Management & Monitoring Strategy
+| description = Develop a strategy for managing the larger team of elite editors and the increased volume of entries requiring verification.
+| operation = Ludus
+| leader = Ludus Lead (Editorial Manager)
+| status = Planning
+| roadmap = 
+* '''Step 1:''' Continue editor recruitment (building on LUDUS-L2D, L2E) towards the 200-editor target.
+* '''Step 2:''' Refine editor onboarding and training materials based on pilot feedback.
+* '''Step 3:''' Implement systems for assigning batches of entries to editors, tracking verification progress, and managing editor communications at scale.
+* '''Step 4:''' Define quality assurance processes for verified data (e.g., peer review by senior editors, spot checks).
+* '''Step 5:''' Develop metrics for monitoring editorial team activity and verification throughput.
+| dependencies = LUDUS-L2G (existing verification process).
+| outcome = A scalable system for managing a large editorial team and a high volume of data verification.
+| time_estimate = 4 hours
+| resources = Communication tools, project management tools.
+| confidence = Medium
+}}
+
+{{IsidoreOodaVLOR
+| loop_id = LUDUS-L4C: Voice Input Feature - Speech Recognition API Evaluation & Selection
+| description = Research and evaluate available speech recognition APIs for their suitability in recognizing Latin pronunciation (Classical and Ecclesiastical). Select an API for prototyping.
+| operation = Ludus
+| leader = Ludus Lead (R&D Specialist)
+| status = Planning
+| roadmap = 
+* '''Step 1:''' Identify key criteria for API selection (accuracy for Latin, support for pronunciation variations, API limits, cost, ease of integration).
+* '''Step 2:''' Research commercial (e.g., Google Cloud Speech-to-Text, Azure Speech Services) and open-source speech recognition APIs/models.
+* '''Step 3:''' Conduct small-scale tests with selected APIs using pre-recorded Latin audio samples (Classical and Ecclesiastical pronunciations).
+* '''Step 4:''' Evaluate test results against criteria.
+* '''Step 5:''' Select the most promising API for prototype development and document the rationale.
+| dependencies = Understanding of Latin phonology.
+| outcome = A selected speech recognition API for the voice input feature. API evaluation report.
+| time_estimate = 4-6 hours
+| resources = Access to speech API developer consoles/SDKs.
+| confidence = Medium (accuracy for Latin might be a challenge)
+}}
+
+{{IsidoreOodaVLOR
+| loop_id = LUDUS-L4D: Voice Input Feature - Prototype Development for Latin Pronunciation
+| description = Develop a prototype within the game application that uses the selected speech recognition API to capture and assess user's Latin pronunciation.
+| operation = Ludus
+| leader = Ludus Lead (Game Developer/R&D)
+| status = Planning
+| roadmap = 
+* '''Step 1:''' Integrate the selected speech API's SDK (from LUDUS-L4C) into the game engine environment (LUDUS-L3A).
+* '''Step 2:''' Design a simple game interaction where the user is prompted to pronounce a Latin word or phrase displayed on screen.
+* '''Step 3:''' Implement functionality to capture audio input from the user's microphone.
+* '''Step 4:''' Send the audio to the speech API and receive the transcription.
+* '''Step 5:''' Implement basic feedback logic (e.g., comparing API transcription to the target text, or if API provides confidence scores). This is a PoC, not full assessment.
+| dependencies = LUDUS-L4C, LUDUS-L3A.
+| outcome = A working prototype demonstrating voice input for Latin pronunciation within the game, using the selected speech API.
+| time_estimate = 4-8 hours
+| resources = Game engine, speech API SDK.
+| confidence = Low to Medium (R&D heavy)
+}}
+
+{{IsidoreOodaVLOR
+| loop_id = LUDUS-L4E: Advanced Logic Proof Mode - Design of Complex Syllogisms & Structures
+| description = Extend the design of the Logic Proof mode to include more complex syllogisms, argument forms, and logical structures.
+| operation = Ludus
+| leader = Ludus Lead (Game Designer/Logic Specialist)
+| status = Planning
+| roadmap = 
+* '''Step 1:''' Based on the simple proof mode (LUDUS-L3K), identify a broader range of logical rules and argument structures for inclusion (e.g., categorical syllogisms, propositional logic, predicate logic elements).
+* '''Step 2:''' Design how these more complex structures will be represented and manipulated by the user in the game UI.
+* '''Step 3:''' Define new types of logic problems or challenges that leverage these advanced concepts.
+* '''Step 4:''' Update UI mockups and interaction flow designs for the advanced logic proof mode.
+* '''Step 5:''' Consider scaffolding and tutorial elements to introduce these complex concepts.
+| dependencies = LUDUS-L3K (existing simple proof mode).
+| outcome = A documented design for the advanced Logic Proof mode, including new rules, problem types, and UI/UX considerations.
+| time_estimate = 4-6 hours
+| resources = Logic textbooks, design tools.
+| confidence = Medium
+}}
+
+{{IsidoreOodaVLOR
+| loop_id = LUDUS-L4F: Advanced Logic Proof Mode - Backend & Frontend Refinement
+| description = Implement the backend validation logic and frontend UI enhancements for the advanced Logic Proof mode.
+| operation = Ludus
+| leader = Ludus Lead (Full Stack Game Developer/Logic Specialist)
+| status = Planning
+| roadmap = 
+* '''Step 1:''' Extend backend logic (from LUDUS-L3J) to support validation of the new, complex logic rules and structures defined in LUDUS-L4E.
+* '''Step 2:''' Enhance frontend UI (from LUDUS-L3K) to accommodate the new interaction elements and display requirements for advanced proofs.
+* '''Step 3:''' Implement any new problem generation or serving logic for advanced challenges.
+* '''Step 4:''' Test the advanced logic proof mode thoroughly. This may be an iterative process.
+| dependencies = LUDUS-L4E.
+| outcome = A functional and refined Logic Proof mode capable of handling more complex syllogisms and logical structures.
+| time_estimate = 4-8 hours (per iteration of adding a set of new rules/structures)
+| resources = Game engine, logic programming expertise.
+| confidence = Medium
+}}
+
+{{IsidoreOodaVLOR
+| loop_id = LUDUS-L4G: System Documentation - UniqueID, DB Schema, Workflows on OODA WIKI
+| description = Create and publish comprehensive system documentation on OODA WIKI, covering the UniqueID schema, database structure, data import processes, and editorial/developer workflows.
+| operation = Ludus
+| leader = Ludus Lead (Technical Writer/System Architect)
+| status = Planning
+| roadmap = 
+* '''Step 1:''' Gather all existing design documents, schema definitions (LUDUS-L1A), ID generation rules (LUDUS-L1F), import script details (L1G, L1H), editorial workflow (L2F), etc.
+* '''Step 2:''' Structure the documentation for different audiences (users, editors, developers).
+* '''Step 3:''' Write detailed descriptions of:
+** The `CCC-NN-SSSSSS-TTT` UniqueID system.
+** The full Ludus database schema.
+** Data import procedures and source mapping.
+** Editorial verification guidelines and workflow.
+** Game logic and architecture (high-level).
+* '''Step 4:''' Publish this documentation on designated OODA WIKI pages.
+* '''Step 5:''' Ensure documentation is clear, well-organized, and up-to-date with the final system state.
+| dependencies = All prior relevant design and implementation loops.
+| outcome = Comprehensive, public-facing system documentation for Operation Ludus hosted on OODA WIKI.
+| time_estimate = 4-8 hours (writing comprehensive documentation is time-consuming)
+| resources = Wiki editing access, all project design documents.
+| confidence = High
+}}
+
+[[Category:Operation VLOR]]
+[[Category:Gracilis VLOR]]
