@@ -1,0 +1,577 @@
+{{DISPLAYTITLE:OODA_WIKI:WikiProject Gracilis/Minervia/VLOR}}
+= OODA_WIKI:WikiProject Gracilis/Minervia/Virtuous Loop Operations Roadmap =
+'''Version:''' 1.1.0.O5
+
+== Vision ==
+To systematically process the entirety of the ~13,000 Tironian shorthand symbols found in the *Commentarii Notarum Tironianarum* (Schmitz, 1893). The ultimate goal is to create a comprehensive, Unicode-compatible font and a highly accurate OCR model, thereby preserving this historic script and making it accessible for modern scholarly research, digital humanities projects, and educational applications.
+
+{{IsidoreOodaVLOR
+| loop_id = MINERVIA-L1A: Source Acquisition and Initial Conversion
+| description = Secure the source PDF (*Commentarii Notarum Tironianarum*) and perform the initial conversion of all its pages into high-resolution PNG images.
+| operation = Minervia
+| leader = Maestro CodeWeaver
+| status = Planning
+| roadmap = 
+* '''Step 1:''' Download `commentariinotar00schm.pdf` from [https://ia601308.us.archive.org/1/items/commentariinotar00schm/commentariinotar00schm.pdf](https://ia601308.us.archive.org/1/items/commentariinotar00schm/commentariinotar00schm.pdf).
+* '''Step 2:''' Verify integrity of the downloaded PDF.
+* '''Step 3:''' Install Poppler (if not already available).
+* '''Step 4:''' Execute `pdftoppm -png -r 300 commentariinotar00schm.pdf pages_raw` to convert all PDF pages to 300 DPI PNG images.
+* '''Step 5:''' Organize converted images into a dedicated directory structure (e.g., `Minervia_Project/01_source_pngs/`).
+| dependencies = Internet access, Poppler.
+| outcome = All pages of the source PDF converted to high-resolution PNG images, organized in a project directory.
+| time_estimate = 2-4 hours
+| resources = Poppler, storage space.
+| confidence = High
+}}
+
+{{IsidoreOodaVLOR
+| loop_id = MINERVIA-L1B: Table Page Identification and Range Definition
+| description = Manually or semi-automatically identify and document the specific page range within the converted PNGs that contains Tab. 1-132.
+| operation = Minervia
+| leader = Lex Scriptorium
+| status = Planning
+| roadmap = 
+* '''Step 1:''' Visually inspect the PNGs (or the PDF) to determine the starting and ending page numbers corresponding to Tables 1 through 132.
+* '''Step 2:''' Document this page range clearly (e.g., in a project README or a dedicated notes file).
+* '''Step 3 (Optional):''' If manual inspection is too slow, explore developing a small helper script to identify pages with dense grid-like structures (exploratory).
+| dependencies = MINERVIA-L1A.
+| outcome = A documented page range identifying the table sections within the PNG image set.
+| time_estimate = 2-4 hours
+| resources = Image viewer.
+| confidence = High
+}}
+
+{{IsidoreOodaVLOR
+| loop_id = MINERVIA-L1C: Table Segmentation Script Development (Proof of Concept - Single Table)
+| description = Develop and test a Python script using OpenCV to segment one representative table page into its constituent cells.
+| operation = Minervia
+| leader = Maestro CodeWeaver
+| status = Planning
+| roadmap = 
+* '''Step 1:''' Select a clear, representative table page PNG from the output of MINERVIA-L1A (e.g., corresponding to Tab. 13).
+* '''Step 2:''' Develop a Python script using OpenCV for:
+** Grayscale conversion and binarization (e.g., adaptive thresholding).
+** Grid line detection (e.g., Hough Transform, contour analysis) or cell boundary detection.
+** Identification of cell coordinates based on the detected grid/boundaries.
+* '''Step 3:''' Test the script thoroughly on the single table page, visually verifying correct cell segmentation.
+| dependencies = MINERVIA-L1A, MINERVIA-L1B; Python, OpenCV.
+| outcome = A Python script capable of accurately segmenting a single table page image into individual cell regions, with documented cell coordinates.
+| time_estimate = 4-6 hours
+| resources = Python, OpenCV.
+| confidence = Medium
+}}
+
+{{IsidoreOodaVLOR
+| loop_id = MINERVIA-L1D: Symbol Cropping Script Development (from Segmented Table)
+| description = Enhance the table segmentation script to identify, crop, and save Tironian symbol cells as individual PNG files.
+| operation = Minervia
+| leader = Maestro CodeWeaver
+| status = Planning
+| roadmap = 
+* '''Step 1:''' Based on the output of MINERVIA-L1C (cell coordinates for a single table), refine the Python script.
+* '''Step 2:''' Implement logic to identify specific columns that contain Tironian symbols (e.g., columns 2 and 5 in the Tab. 13 example).
+* '''Step 3:''' Crop these symbol-containing cells from the table image.
+* '''Step 4:''' Save each cropped symbol as an individual, uniquely named PNG file (e.g., `table_013_row_01_col_02_symbol.png`). Establish a clear and consistent naming convention.
+* '''Step 5:''' Test thoroughly on the representative table page from MINERVIA-L1C.
+| dependencies = MINERVIA-L1C.
+| outcome = An enhanced Python script that extracts and saves individual Tironian symbol images from a segmented table page. A small set of sample symbol PNGs.
+| time_estimate = 3-4 hours
+| resources = Python, OpenCV.
+| confidence = Medium
+}}
+
+{{IsidoreOodaVLOR
+| loop_id = MINERVIA-L1E: Transcription OCR Script Development (from Segmented Table)
+| description = Develop a Python script using Tesseract OCR to extract Latin transcriptions from the cells adjacent to the Tironian symbols.
+| operation = Minervia
+| leader = Synapse LinkAI
+| status = Planning
+| roadmap = 
+* '''Step 1:''' Install Tesseract OCR and the `pytesseract` Python library.
+* '''Step 2:''' Further refine the script from MINERVIA-L1C/L1D.
+* '''Step 3:''' Implement logic to identify columns containing Latin transcriptions (e.g., columns 3 and 6 in Tab. 13).
+* '''Step 4:''' Crop these transcription-containing cells.
+* '''Step 5:''' Apply Tesseract OCR (via `pytesseract`) to each transcription cell image to extract the text.
+* '''Step 6:''' Implement basic text cleaning for OCR output if necessary.
+* '''Step 7:''' Test on the representative table page, comparing OCR output to actual transcriptions.
+| dependencies = MINERVIA-L1C; Python, Tesseract OCR, `pytesseract`.
+| outcome = A Python script capable of extracting Latin transcriptions from a segmented table page. Sample OCR'd transcriptions.
+| time_estimate = 3-4 hours
+| resources = Python, Tesseract OCR, `pytesseract`.
+| confidence = Medium
+}}
+
+{{IsidoreOodaVLOR
+| loop_id = MINERVIA-L1F: Master Index Generation Script Development (Single Table Output)
+| description = Develop a Python script to compile symbol image paths and their corresponding OCR'd Latin transcriptions into a master CSV file for a single table's output.
+| operation = Minervia
+| leader = Lex Scriptorium
+| status = Planning
+| roadmap = 
+* '''Step 1:''' Utilize the outputs from MINERVIA-L1D (symbol image filenames) and MINERVIA-L1E (OCR'd transcriptions).
+* '''Step 2:''' Develop a Python script to create a CSV file.
+* '''Step 3:''' The CSV should include columns such as: `symbol_image_path`, `ocr_transcription`, `source_table_page_num`, `source_table_id_guess`, `source_row_num`, `source_col_num_symbol`, `source_col_num_transcription`.
+* '''Step 4:''' Test the script using the outputs generated from the single representative table page.
+| dependencies = MINERVIA-L1D, MINERVIA-L1E.
+| outcome = A Python script that generates a master CSV index for one table. A sample CSV file.
+| time_estimate = 2-3 hours
+| resources = Python.
+| confidence = High
+}}
+
+{{IsidoreOodaVLOR
+| loop_id = MINERVIA-L1G: Batch Processing Framework Development & Initial Small Batch Run
+| description = Adapt the single-table scripts (segmentation, symbol cropping, transcription OCR, index generation) for batch processing and test on a small set of diverse table pages (e.g., 5-10 tables).
+| operation = Minervia
+| leader = Maestro CodeWeaver
+| status = Planning
+| roadmap = 
+* '''Step 1:''' Refactor the Python scripts from MINERVIA-L1C, L1D, L1E, and L1F to iterate over a list of table page image inputs.
+* '''Step 2:''' Implement robust error handling, logging, and progress indicators for batch operations.
+* '''Step 3:''' Consider incorporating Python's `multiprocessing` library to speed up image processing tasks if feasible for development within supervised time.
+* '''Step 4:''' Select a diverse set of 5-10 table page PNGs for initial batch testing.
+* '''Step 5 (Supervised):''' Run the batch script, monitor its execution, and review outputs for these initial tables. Debug as necessary. (Actual run may be longer for larger test batches).
+| dependencies = MINERVIA-L1A through L1F.
+| outcome = A robust batch processing script capable of handling multiple table pages. An initial master CSV index and set of symbol images for the small batch of tables.
+| time_estimate = 4-6 hours (for script refactoring, framework development, and testing supervision)
+| resources = Python, OpenCV, Tesseract.
+| confidence = Medium
+}}
+
+{{IsidoreOodaVLOR
+| loop_id = MINERVIA-L1H: Full Batch Processing Execution & Initial Data Verification
+| description = Execute the batch processing script on all 132 tables. Develop and perform initial data verification and QA on the complete extracted dataset.
+| operation = Minervia
+| leader = Commander Rex Strategos
+| status = Planning
+| roadmap = 
+* '''Step 1 (Unsupervised):''' Execute the batch processing script (from MINERVIA-L1G) on all identified table pages (output from MINERVIA-L1B). This may take considerable time.
+* '''Step 2 (Supervised):''' Monitor the initial phase of the full batch run.
+* '''Step 3 (Supervised):''' Develop a QA/verification script or checklist to:
+** Check if the number of extracted symbols is within an expected range (~13,000).
+** Spot-check a sample of extracted symbol images against their originals in the PDF/PNGs.
+** Review a sample of OCR'd transcriptions for common errors or systematic issues.
+** Analyze execution logs for any reported errors during the batch process.
+* '''Step 4 (Supervised):''' Perform initial QA based on the script/checklist. Document findings.
+* '''Step 5:''' If significant systematic errors are found, iterate on scripts from L1C-L1G.
+| dependencies = MINERVIA-L1G.
+| outcome = A complete dataset consisting of ~13,000 individual symbol PNG images. A comprehensive master CSV index file. An initial QA report detailing data quality and any identified issues.
+| time_estimate = 4 hours (for QA script dev, monitoring setup, initial results review, and planning next steps). Full batch run is longer.
+| resources = Python, generated data.
+| confidence = Medium
+}}
+
+{{IsidoreOodaVLOR
+| loop_id = MINERVIA-L1I: Manual Data Cleaning and Refinement Strategy
+| description = Based on QA from L1H, develop a strategy and (if needed) simple tools for manual correction of symbol segmentations and OCR transcriptions. Perform initial targeted cleaning.
+| operation = Minervia
+| leader = Lex Scriptorium
+| status = Planning
+| roadmap = 
+* '''Step 1:''' Analyze the QA report from MINERVIA-L1H to identify common error patterns in symbol extraction or transcription.
+* '''Step 2:''' Develop clear guidelines for manual correction (e.g., editing the CSV, re-cropping specific symbols).
+* '''Step 3:''' If error volume is high, investigate or develop simple tools to facilitate corrections (e.g., a basic web interface to view symbol and edit transcription, or a script to flag suspicious entries).
+* '''Step 4:''' Perform an initial round of targeted manual cleaning on a subset of the data to test the process.
+* '''Step 5:''' Plan for potential larger-scale crowdsourcing or distributed effort if manual cleaning is extensive.
+| dependencies = MINERVIA-L1H.
+| outcome = Cleaned and verified master CSV index and corresponding symbol images. A documented process and (if applicable) tools for data correction.
+| time_estimate = 4 hours (for analysis, guideline dev, tool exploration/dev, initial cleaning). Larger cleaning effort is separate.
+| resources = Python (optional for tools), spreadsheet software.
+| confidence = Medium
+}}
+
+{{IsidoreOodaVLOR
+| loop_id = MINERVIA-L2A: Vectorization & Normalization Script Development (Proof of Concept)
+| description = Develop and test a Python script for batch vectorization of symbol PNGs to SVGs using Potrace, and normalization of SVGs using Inkscape's command-line interface. Test on a small batch.
+| operation = Minervia
+| leader = Maestro CodeWeaver
+| status = Planning
+| roadmap = 
+* '''Step 1:''' Install Potrace and Inkscape (ensure CLI access).
+* '''Step 2:''' Select a small batch (e.g., 20-50) of cleaned symbol PNGs from MINERVIA-L1I.
+* '''Step 3:''' Develop a Python script to:
+** Iterate through the batch of symbol PNGs.
+** Execute Potrace on each PNG to generate an SVG file.
+** Execute Inkscape CLI on each generated SVG to normalize it (e.g., `fit-canvas-to-selection`, simplify paths, ensure consistent scaling/viewbox if possible).
+* '''Step 4:''' Experiment with Potrace and Inkscape parameters to achieve optimal output quality versus file size and processing time. Document chosen parameters.
+* '''Step 5:''' Test the script and visually inspect the resulting SVGs.
+| dependencies = MINERVIA-L1I; Potrace, Inkscape, Python.
+| outcome = A Python script for batch vectorization and normalization. A set of sample SVG files. Documented parameters for Potrace/Inkscape.
+| time_estimate = 4 hours
+| resources = Potrace, Inkscape, Python.
+| confidence = Medium
+}}
+
+{{IsidoreOodaVLOR
+| loop_id = MINERVIA-L2B: Full Batch Vectorization & Normalization Execution and QA
+| description = Execute the vectorization and normalization script on all ~13,000 symbol PNGs and perform quality assurance.
+| operation = Minervia
+| leader = Maestro CodeWeaver
+| status = Planning
+| roadmap = 
+* '''Step 1 (Unsupervised):''' Run the script developed in MINERVIA-L2A on all cleaned symbol PNGs from MINERVIA-L1I. This may take considerable time.
+* '''Step 2 (Supervised):''' Monitor the initial phase of the full batch run.
+* '''Step 3 (Supervised):''' Perform QA on the generated SVGs:
+** Check for completeness (all PNGs converted).
+** Spot-check a sample of SVGs for vector quality, fidelity to the original raster, and proper normalization.
+** Check for excessively large or malformed SVGs.
+* '''Step 4:''' Document QA findings. Iterate on script parameters (L2A) if systematic issues are found.
+| dependencies = MINERVIA-L2A.
+| outcome = A complete set of ~13,000 normalized SVG files for each Tironian symbol. QA report on SVG quality.
+| time_estimate = 2-3 hours (for monitoring setup, QA). Full batch run is longer.
+| resources = Python, Potrace, Inkscape, generated PNGs.
+| confidence = Medium
+}}
+
+{{IsidoreOodaVLOR
+| loop_id = MINERVIA-L2C: Unicode PUA Assignment Strategy & CSV Update
+| description = Define the Unicode Private Use Area (PUA) mapping strategy and programmatically assign a unique PUA codepoint to each symbol, updating the master CSV.
+| operation = Minervia
+| leader = Lex Scriptorium
+| status = Planning
+| roadmap = 
+* '''Step 1:''' Research and formally decide on the specific Unicode PUA ranges to be used (e.g., U+E000-U+F8FF, then Supplementary PUA-A: U+F0000–U+FFFFD if more than 6400 symbols). Document this decision.
+* '''Step 2:''' Develop a Python script to:
+** Read the master `symbols.csv` (output of MINERVIA-L1I).
+** Assign a unique, sequential Unicode PUA codepoint to each symbol entry.
+** Add a new column (e.g., `unicode_codepoint`) to the CSV.
+* '''Step 3:''' Save the updated CSV as `symbols_with_unicode.csv`.
+* '''Step 4:''' Verify the script's output for correctness (e.g., unique assignments, correct range).
+| dependencies = MINERVIA-L1I.
+| outcome = An updated master CSV file (`symbols_with_unicode.csv`) containing a unique Unicode PUA codepoint for each symbol. Documented PUA assignment strategy.
+| time_estimate = 2-3 hours
+| resources = Python, CSV data.
+| confidence = High
+}}
+
+{{IsidoreOodaVLOR
+| loop_id = MINERVIA-L2D: FontForge Script Development (Glyph Import & Mapping - Proof of Concept)
+| description = Develop a FontForge Python script to create a new font, import SVG glyphs, and map them to their assigned Unicode PUA codepoints. Test with a small batch of symbols.
+| operation = Minervia
+| leader = Maestro CodeWeaver
+| status = Planning
+| roadmap = 
+* '''Step 1:''' Install FontForge and ensure Python scripting capabilities are enabled/configured.
+* '''Step 2:''' Develop a Python script using FontForge's API to:
+** Create a new font file (e.g., `TironianNotes.sfd`).
+** Set basic font metadata (name, version, etc.).
+** Read `symbols_with_unicode.csv` (from MINERVIA-L2C) for a small subset of symbols (e.g., 20-50).
+** For each symbol in the subset:
+*** Import its corresponding normalized SVG file (from MINERVIA-L2B).
+*** Assign the imported glyph to its designated Unicode PUA codepoint.
+*** Set default font metrics (e.g., width, ascent, descent – to be refined later).
+* '''Step 3:''' Generate a test TTF/OTF font file from the FontForge script.
+* '''Step 4:''' Test the script and the generated small font.
+| dependencies = MINERVIA-L2B, MINERVIA-L2C; FontForge, Python.
+| outcome = A FontForge Python script capable of importing SVGs and mapping them to Unicode PUA codepoints. A small test TTF/OTF font file containing a subset of glyphs.
+| time_estimate = 4-6 hours (FontForge scripting can be intricate)
+| resources = FontForge, Python, SVG files, CSV data.
+| confidence = Medium
+}}
+
+{{IsidoreOodaVLOR
+| loop_id = MINERVIA-L2E: Full Font Assembly & Initial Testing
+| description = Run the FontForge script to assemble the complete font with all ~13,000 symbols and perform initial testing of the generated font file.
+| operation = Minervia
+| leader = Maestro CodeWeaver
+| status = Planning
+| roadmap = 
+* '''Step 1 (Unsupervised):''' Adapt and run the FontForge Python script from MINERVIA-L2D for all ~13,000 symbols. This may take considerable time.
+* '''Step 2 (Supervised):''' Monitor the FontForge script execution.
+* '''Step 3 (Supervised):''' Once generated, install the complete `TironianNotes.ttf/otf` font.
+* '''Step 4 (Supervised):''' Perform initial testing:
+** Try typing a sample of PUA codepoints in a text editor or word processor.
+** Visually verify the appearance of a diverse sample of symbols.
+** Check for any obviously missing or malformed glyphs.
+** Use font validation tools if available (e.g., FontForge's validation, online validators).
+* '''Step 5:''' Document initial test results.
+| dependencies = MINERVIA-L2D.
+| outcome = The first complete version of the `TironianNotes.ttf/otf` font file containing all symbols. An initial test report.
+| time_estimate = 3-4 hours (for monitoring, installation, testing). Full assembly is longer.
+| resources = FontForge, Python, generated font file.
+| confidence = Medium
+}}
+
+{{IsidoreOodaVLOR
+| loop_id = MINERVIA-L2F: Font Refinement and Metrics Adjustment
+| description = Review the complete font and refine its metrics (e.g., spacing, baseline, ascent, descent, kerning if applicable) for improved visual consistency and usability.
+| operation = Minervia
+| leader = Maestro CodeWeaver
+| status = Planning
+| roadmap = 
+* '''Step 1:''' Visually review the generated font (from MINERVIA-L2E) in various applications or test documents.
+* '''Step 2:''' Identify common issues with symbol spacing, alignment, relative sizing, or baseline consistency.
+* '''Step 3:''' Use FontForge (GUI or further scripting) to adjust global font metrics or individual glyph metrics as needed. This may involve:
+** Adjusting ascent, descent, em size.
+** Standardizing glyph widths or implementing auto-spacing.
+** Correcting baseline alignment for problematic glyphs.
+* '''Step 4:''' Re-generate the TTF/OTF font file.
+* '''Step 5:''' Test the refined font. This loop may be iterative.
+| dependencies = MINERVIA-L2E.
+| outcome = An improved and refined version of the `TironianNotes.ttf/otf` font with better visual consistency.
+| time_estimate = 4 hours (per iteration of review, adjustment, and re-testing)
+| resources = FontForge, generated font file.
+| confidence = Medium
+}}
+
+{{IsidoreOodaVLOR
+| loop_id = MINERVIA-L3A: Training Data Generation Script (Basic Symbols & Sequences)
+| description = Develop a Python script using the Pillow library to render training images from the `TironianNotes.ttf` font. Generate images of individual symbols and short sequences, along with their ground truth transcriptions.
+| operation = Minervia
+| leader = Synapse LinkAI
+| status = Planning
+| roadmap = 
+* '''Step 1:''' Install Pillow library.
+* '''Step 2:''' Develop a Python script that:
+** Loads the `TironianNotes.ttf` font (from MINERVIA-L2F) and `symbols_with_unicode.csv`.
+** Generates individual PNG images for each of the ~13,000 symbols.
+** Generates PNG images containing short, random sequences of Tironian symbols (e.g., 2-5 symbols per image).
+** For each generated image, create a corresponding ground truth text file (`.gt.txt`) containing the sequence of Unicode characters depicted.
+* '''Step 3:''' Generate a small sample dataset (e.g., a few hundred images of individual symbols and sequences) to test the script.
+| dependencies = MINERVIA-L2F; Python, Pillow.
+| outcome = A Python script for generating synthetic training images and corresponding ground truth files. A small sample training dataset.
+| time_estimate = 3-4 hours
+| resources = Python, Pillow, generated font file, CSV data.
+| confidence = High
+}}
+
+{{IsidoreOodaVLOR
+| loop_id = MINERVIA-L3B: Data Augmentation Script Development
+| description = Develop a Python script to apply various augmentations to the synthetically generated training images to improve model robustness.
+| operation = Minervia
+| leader = Synapse LinkAI
+| status = Planning
+| roadmap = 
+* '''Step 1:''' Choose an augmentation library (e.g., OpenCV, `albumentations`, or implement custom functions).
+* '''Step 2:''' Implement functions for common augmentations:
+** Random noise (Gaussian, salt & pepper).
+** Small rotations (e.g., +/- 5 degrees).
+** Scaling variations (e.g., 90%-110%).
+** Slight blurs or distortions.
+** Brightness/contrast adjustments.
+* '''Step 3:''' Integrate these augmentation functions into the training data generation script (MINERVIA-L3A) or create a separate script to post-process the generated images.
+* '''Step 4:''' Apply augmentations to the small sample dataset and visually inspect results.
+| dependencies = MINERVIA-L3A; Python, image processing library (e.g., OpenCV).
+| outcome = A Python script (or additions to existing script) for applying data augmentations. An augmented version of the sample training dataset.
+| time_estimate = 3-4 hours
+| resources = Python, OpenCV or other augmentation libraries.
+| confidence = High
+}}
+
+{{IsidoreOodaVLOR
+| loop_id = MINERVIA-L3C: Tesseract Training Environment Setup & Initial File Generation (text2image)
+| description = Set up the Tesseract OCR training environment. Generate initial training files (image/box pairs or image/gt.txt) using Tesseract's `text2image` tool with the custom font.
+| operation = Minervia
+| leader = Synapse LinkAI
+| status = Planning
+| roadmap = 
+* '''Step 1:''' Install Tesseract OCR training tools (including `tesstrain` scripts and dependencies like Leptonica).
+* '''Step 2:''' Prepare the necessary directory structure and configuration files for training a new language model (e.g., "tironian") within Tesseract's `langdata` and `tesstrain` framework.
+* '''Step 3:''' Use Tesseract's `text2image` tool to generate synthetic training data (image files and corresponding `.box` files or ground truth text files). This tool directly uses the font file (`TironianNotes.ttf`) and a list of strings (sequences of Tironian Unicode characters) to create training examples.
+* '''Step 4:''' Generate a small set of training files (e.g., for a few hundred lines of Tironian text) using `text2image`.
+* '''Step 5:''' Verify the generated `.box` files or ground truth text files for correctness.
+| dependencies = MINERVIA-L2F; Tesseract OCR training tools.
+| outcome = A configured Tesseract training environment. A process established for generating Tesseract-compatible training files (images and `.box` or `.gt.txt` files) using `text2image`. A small sample of these files.
+| time_estimate = 4 hours
+| resources = Tesseract OCR training tools, generated font file.
+| confidence = Medium
+}}
+
+{{IsidoreOodaVLOR
+| loop_id = MINERVIA-L3D: Initial Tesseract Model Training (Small Dataset)
+| description = Train an initial Tesseract OCR model (`tironian.traineddata`) using the small, `text2image`-generated (and optionally augmented) sample dataset to verify the training pipeline.
+| operation = Minervia
+| leader = Synapse LinkAI
+| status = Planning
+| roadmap = 
+* '''Step 1:''' Use the `tesstrain.sh` script (or underlying Tesseract training commands) with the training files generated in MINERVIA-L3C.
+* '''Step 2:''' Configure `tesstrain.sh` for the "tironian" language, pointing to the generated training data.
+* '''Step 3:''' Execute the training process for the small dataset.
+* '''Step 4:''' Debug any issues encountered during the training setup or execution.
+* '''Step 5:''' Successfully generate an initial `tironian.traineddata` file.
+| dependencies = MINERVIA-L3C.
+| outcome = A working Tesseract training pipeline. The first version of the `tironian.traineddata` model, trained on a small sample dataset.
+| time_estimate = 4 hours (training on small data is fast; focus is on pipeline validation)
+| resources = Tesseract OCR training tools, sample training data.
+| confidence = Medium
+}}
+
+{{IsidoreOodaVLOR
+| loop_id = MINERVIA-L3E: Large-Scale Training Data Generation (text2image & Augmentation)
+| description = Generate a large-scale training dataset (tens of thousands of image/box pairs or image/gt.txt lines) using `text2image` and apply augmentations.
+| operation = Minervia
+| leader = Synapse LinkAI
+| status = Planning
+| roadmap = 
+* '''Step 1:''' Prepare a large corpus of Tironian text sequences (Unicode characters from `symbols_with_unicode.csv`, potentially combined into longer strings or using text from actual transcriptions if available and converted to PUA codes).
+* '''Step 2 (Unsupervised):''' Run `text2image` extensively with this corpus and various rendering parameters (font sizes, slight variations if supported) to generate tens of thousands of training lines.
+* '''Step 3 (Unsupervised, optional but recommended):''' Apply augmentations (from MINERVIA-L3B) to the generated image files if `text2image` doesn't provide sufficient intrinsic variation.
+* '''Step 4 (Supervised):''' Configure and initiate the generation process. Monitor initial output for quality and correctness.
+| dependencies = MINERVIA-L3B, MINERVIA-L3C.
+| outcome = A large-scale set of training images and corresponding `.box` or `.gt.txt` files, ready for full model training.
+| time_estimate = 2 hours (for setup, corpus preparation, monitoring). Generation process is longer and unsupervised.
+| resources = Tesseract OCR training tools, Python, augmentation scripts, generated font.
+| confidence = Medium
+}}
+
+{{IsidoreOodaVLOR
+| loop_id = MINERVIA-L3F: Full Tesseract Model Training & Initial Validation
+| description = Train the Tesseract OCR model on the complete large-scale dataset. Perform initial validation on a hold-out set.
+| operation = Minervia
+| leader = Synapse LinkAI
+| status = Planning
+| roadmap = 
+* '''Step 1 (Unsupervised):''' Execute the Tesseract training process (`tesstrain.sh` or equivalent commands) using the full training dataset generated in MINERVIA-L3E. This may take many hours or days.
+* '''Step 2 (Supervised):''' Monitor the training progress (Tesseract typically outputs error rates per iteration).
+* '''Step 3 (Supervised):''' Prepare a small, independent validation set of Tironian text images (either synthetically generated using different parameters/sequences, or ideally, a few snippets manually transcribed from the original manuscript pages if feasible and converted to image/text pairs).
+* '''Step 4 (Supervised):''' Test the fully trained `tironian.traineddata` model on this validation set.
+* '''Step 5 (Supervised):''' Calculate initial accuracy metrics (e.g., Character Error Rate (CER), Word Error Rate (WER) if applicable). Document results.
+| dependencies = MINERVIA-L3D, MINERVIA-L3E.
+| outcome = A version of `tironian.traineddata` trained on the full dataset. Initial validation results and accuracy metrics.
+| time_estimate = 4 hours (for monitoring setup, validation set prep, testing, results analysis). Full training is longer.
+| resources = Tesseract OCR training tools, large training dataset, validation set.
+| confidence = Medium
+}}
+
+{{IsidoreOodaVLOR
+| loop_id = MINERVIA-L3G: OCR Model Iteration and Parameter Tuning (Optional)
+| description = If initial validation results (from MINERVIA-L3F) are insufficient, iterate by refining training data, augmentations, or Tesseract training parameters.
+| operation = Minervia
+| leader = Synapse LinkAI
+| status = Planning
+| roadmap = 
+* '''Step 1:''' Analyze errors from the initial validation. Identify patterns or types of symbols/sequences that are poorly recognized.
+* '''Step 2:''' Based on analysis, consider:
+** Adjusting augmentation strategies or parameters.
+** Modifying training data generation (e.g., different types of text sequences, more examples of problematic symbols).
+** Experimenting with Tesseract's training parameters (e.g., network architecture if using LSTM, learning rate).
+* '''Step 3:''' Re-generate parts of the training data if needed.
+* '''Step 4:''' Re-train the model (either fully or fine-tuning from the previous model).
+* '''Step 5:''' Re-validate on the hold-out set. This loop may be repeated multiple times.
+| dependencies = MINERVIA-L3F.
+| outcome = An improved `tironian.traineddata` model with better accuracy. Documentation of changes made and their impact.
+| time_estimate = 4+ hours (per iteration: analysis, adjustment, setup for re-training, re-validation)
+| resources = Tesseract OCR training tools, training data, validation set.
+| confidence = Low to Medium (improvement depends on complexity)
+}}
+
+{{IsidoreOodaVLOR
+| loop_id = MINERVIA-L4A: End-to-End Pipeline Scripting (Symbol Extraction to Font Generation)
+| description = Create a master script or workflow definition to automate the entire pipeline from initial PDF page image processing through to the generation of the final TTF/OTF font file.
+| operation = Minervia
+| leader = Maestro CodeWeaver
+| status = Planning
+| roadmap = 
+* '''Step 1:''' Review and consolidate the individual scripts developed in Loops L1A through L2F.
+* '''Step 2:''' Develop a main Python script (or potentially a workflow management tool configuration like SnakeMake or Nextflow if complexity warrants it) that calls these individual modules/scripts in the correct sequence.
+* '''Step 3:''' Implement robust parameterization for the master script (e.g., input directories, output directories, key parameters for each step).
+* '''Step 4:''' Incorporate basic error checking, logging, and continuation logic (e.g., ability to resume from a failed step).
+* '''Step 5:''' Test the master script on a small subset of data to ensure it runs end-to-end.
+| dependencies = All L1 and L2 loops.
+| outcome = A master script or workflow definition for automating the font generation pipeline.
+| time_estimate = 4-6 hours
+| resources = Python, all previously developed scripts.
+| confidence = Medium
+}}
+
+{{IsidoreOodaVLOR
+| loop_id = MINERVIA-L4B: Automated Quality Control Checks Development & Integration
+| description = Develop and integrate automated quality control (QC) checks at various critical stages within the end-to-end pipeline.
+| operation = Minervia
+| leader = Maestro CodeWeaver
+| status = Planning
+| roadmap = 
+* '''Step 1:''' Identify key QC points within the pipeline (e.g., after symbol extraction - count verification; after vectorization - SVG validity; after font generation - glyph count verification).
+* '''Step 2:''' Develop Python scripts for each QC check. Examples:
+** Verify expected number of extracted symbol PNGs against table structure.
+** Check for empty or malformed SVG files.
+** Validate the generated font for the presence of all expected glyphs (compare against `symbols_with_unicode.csv`).
+** Check for unusually large/small file sizes that might indicate errors.
+* '''Step 3:''' Integrate these QC scripts into the master pipeline script (from MINERVIA-L4A) so they run automatically and log their results or raise alerts.
+| dependencies = MINERVIA-L4A.
+| outcome = Automated QC scripts integrated into the main pipeline, providing regular checks on data integrity and processing success.
+| time_estimate = 4 hours
+| resources = Python, pipeline scripts.
+| confidence = Medium
+}}
+
+{{IsidoreOodaVLOR
+| loop_id = MINERVIA-L4C: Scholarly Documentation Generation (Character Map & Font Usage)
+| description = Create comprehensive documentation for the `TironianNotes.ttf` font and the `tironian.traineddata` OCR model. This includes a full character map.
+| operation = Minervia
+| leader = Lex Scriptorium
+| status = Planning
+| roadmap = 
+* '''Step 1:''' Develop a script (e.g., Python with ReportLab, or generating Markdown/HTML) to:
+** Read `symbols_with_unicode.csv`.
+** Generate a character map document that visually displays each Tironian glyph (rendered using the font, or linking to its image), alongside its assigned Unicode PUA codepoint and its Latin transcription.
+* '''Step 2:''' Write introductory text describing the font, its source (*Commentarii Notarum Tironianarum*), the PUA mapping strategy, and basic usage instructions.
+* '''Step 3:''' Document how to install and use the `tironian.traineddata` model with Tesseract OCR.
+* '''Step 4:''' Compile this information into a user-friendly format (e.g., PDF, Markdown files in a repository, or a Wiki page).
+| dependencies = MINERVIA-L2F, MINERVIA-L3F.
+| outcome = Comprehensive scholarly documentation for the Tironian font and OCR model, including a full character map.
+| time_estimate = 4 hours
+| resources = Python (for script), text editor, generated font/CSV.
+| confidence = High
+}}
+
+{{IsidoreOodaVLOR
+| loop_id = MINERVIA-L4D: OCR Model Integration Proof of Concept (Simple Application)
+| description = Integrate the trained Tesseract model (`tironian.traineddata`) into a simple command-line application or Python script that can perform OCR on an image file containing Tironian notes.
+| operation = Minervia
+| leader = Synapse LinkAI
+| status = Planning
+| roadmap = 
+* '''Step 1:''' Develop a Python script that:
+** Takes an image file path as a command-line argument.
+** Preprocesses the image if necessary (e.g., binarization, similar to what Tesseract expects).
+** Uses `pytesseract` to perform OCR on the image, specifying the custom `tironian` language model.
+** Prints the recognized Tironian text (as Unicode PUA characters) and/or their Latin transcriptions (by looking up PUA codes in `symbols_with_unicode.csv`).
+* '''Step 2:''' Test this script with a few sample images containing Tironian script (either synthetic, or ideally, scans from actual manuscripts if available for testing).
+| dependencies = MINERVIA-L3F, `pytesseract`.
+| outcome = A demo Python script or command-line application capable of using the custom Tironian OCR model to transcribe text from an image.
+| time_estimate = 3-4 hours
+| resources = Python, `pytesseract`, trained OCR model, sample images.
+| confidence = High
+}}
+
+{{IsidoreOodaVLOR
+| loop_id = MINERVIA-L4E: Full Pipeline Test & Refinement (End-to-End Run)
+| description = Conduct a full end-to-end test run of the automated pipeline (from MINERVIA-L4A, including QC checks from MINERVIA-L4B) using a significant portion or all of the source data. Refine as needed.
+| operation = Minervia
+| leader = Commander Rex Strategos
+| status = Planning
+| roadmap = 
+* '''Step 1 (Unsupervised if very long):''' Execute the complete master pipeline script on the full set of table images.
+* '''Step 2 (Supervised):''' Closely monitor the execution, paying attention to logs, QC reports, and resource usage.
+* '''Step 3 (Supervised):''' Review the final outputs (font file, character map, sample OCR results) for overall quality and completeness.
+* '''Step 4 (Supervised):''' Identify any remaining bottlenecks, points of failure, or areas for improvement in the pipeline's robustness or efficiency.
+* '''Step 5:''' Make necessary refinements to the scripts or workflow configuration. This might involve revisiting earlier loops if fundamental issues are discovered.
+| dependencies = MINERVIA-L4A, MINERVIA-L4B.
+| outcome = A tested and refined end-to-end automated pipeline for generating the Tironian font and supporting OCR development. A report on the pipeline's performance and stability.
+| time_estimate = 4 hours (for supervision, review, and planning refinements). Pipeline run itself is longer.
+| resources = Full pipeline scripts, source data.
+| confidence = Medium
+}}
+
+{{IsidoreOodaVLOR
+| loop_id = MINERVIA-L4F: Packaging and Distribution Strategy for Font & OCR Model
+| description = Define and document the strategy for packaging, licensing, and distributing the Tironian font, OCR model, and associated tools/documentation.
+| operation = Minervia
+| leader = Lex Scriptorium
+| status = Planning
+| roadmap = 
+* '''Step 1:''' Decide on appropriate open-source licenses for the different components (e.g., OFL for the font, Apache 2.0 or MIT for scripts and OCR model data).
+* '''Step 2:''' Prepare a comprehensive README file detailing the project, its outputs, installation instructions for the font and OCR model, usage examples, and licensing information.
+* '''Step 3:''' Plan the distribution mechanism (e.g., a dedicated GitHub repository, an entry on a relevant font or digital humanities portal).
+* '''Step 4:''' Create an archive (e.g., ZIP file) containing the font, OCR model (`.traineddata`), documentation, and any necessary helper scripts.
+* '''Step 5:''' Document this strategy.
+| dependencies = MINERVIA-L2F, MINERVIA-L3F, MINERVIA-L4C.
+| outcome = A clear plan and initial materials (README, license choices) for packaging and distributing the outputs of Operation Minervia.
+| time_estimate = 3-4 hours
+| resources = Text editor, understanding of open-source licenses.
+| confidence = High
+}}
+
+[[Category:Operation VLOR]]
+[[Category:Gracilis VLOR]]
